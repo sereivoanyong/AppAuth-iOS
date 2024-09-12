@@ -256,12 +256,13 @@ static const NSUInteger kExpiryTimeTolerance = 60;
 }
 
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
-  _lastAuthorizationResponse = [aDecoder decodeObjectOfClass:[OIDAuthorizationResponse class]
-                                                      forKey:kLastAuthorizationResponseKey];
-  _lastTokenResponse = [aDecoder decodeObjectOfClass:[OIDTokenResponse class]
-                                              forKey:kLastTokenResponseKey];
-  self = [self initWithAuthorizationResponse:_lastAuthorizationResponse
-                               tokenResponse:_lastTokenResponse];
+  OIDAuthorizationResponse *authorizationResponse = [aDecoder decodeObjectOfClass:[OIDAuthorizationResponse class]
+                                                                           forKey:kLastAuthorizationResponseKey];
+  OIDTokenResponse *tokenResponse = [aDecoder decodeObjectOfClass:[OIDTokenResponse class]
+                                                           forKey:kLastTokenResponseKey];
+  self = [self initWithAuthorizationResponse:authorizationResponse
+                               tokenResponse:tokenResponse
+                        registrationResponse:nil];
   if (self) {
     _authorizationError =
         [aDecoder decodeObjectOfClass:[NSError class] forKey:kAuthorizationErrorKey];
