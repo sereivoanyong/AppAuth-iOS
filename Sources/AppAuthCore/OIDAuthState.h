@@ -173,6 +173,8 @@ static NSString *const kRefreshTokenRequestException =
     registrationResponse:(nullable OIDRegistrationResponse *)registrationResponse
     NS_DESIGNATED_INITIALIZER;
 
+- (nullable instancetype)initWithCoder:(NSCoder *)coder NS_DESIGNATED_INITIALIZER;
+
 /*! @brief Updates the authorization state based on a new authorization response.
     @param authorizationResponse The new authorization response to update the state with.
     @param error Any error encountered when performing the authorization request. Errors in the
