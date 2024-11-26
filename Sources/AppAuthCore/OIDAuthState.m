@@ -189,7 +189,7 @@ static const NSUInteger kExpiryTimeTolerance = 60;
     @discussion Creates an auth state from an authorization response and token response.
  */
 - (instancetype)initWithAuthorizationResponse:(OIDAuthorizationResponse *)authorizationResponse
-                                         tokenResponse:(nullable OIDTokenResponse *)tokenResponse {
+                                tokenResponse:(nullable OIDTokenResponse *)tokenResponse {
   return [self initWithAuthorizationResponse:authorizationResponse
                                tokenResponse:tokenResponse
                         registrationResponse:nil];
@@ -204,10 +204,9 @@ static const NSUInteger kExpiryTimeTolerance = 60;
                         registrationResponse:registrationResponse];
 }
 
-- (instancetype)initWithAuthorizationResponse:
-    (nullable OIDAuthorizationResponse *)authorizationResponse
-           tokenResponse:(nullable OIDTokenResponse *)tokenResponse
-    registrationResponse:(nullable OIDRegistrationResponse *)registrationResponse {
+- (instancetype)initWithAuthorizationResponse:(nullable OIDAuthorizationResponse *)authorizationResponse
+                                tokenResponse:(nullable OIDTokenResponse *)tokenResponse
+                         registrationResponse:(nullable OIDRegistrationResponse *)registrationResponse {
   self = [super init];
   if (self) {
     _pendingActionsSyncObject = [[NSObject alloc] init];
@@ -260,10 +259,18 @@ static const NSUInteger kExpiryTimeTolerance = 60;
                                                                            forKey:kLastAuthorizationResponseKey];
   OIDTokenResponse *tokenResponse = [aDecoder decodeObjectOfClass:[OIDTokenResponse class]
                                                            forKey:kLastTokenResponseKey];
-  self = [self initWithAuthorizationResponse:authorizationResponse
-                               tokenResponse:tokenResponse
-                        registrationResponse:nil];
+  self = [super init];
   if (self) {
+    _pendingActionsSyncObject = [[NSObject alloc] init];
+
+    if (authorizationResponse) {
+      [self updateWithAuthorizationResponse:authorizationResponse error:nil];
+    }
+
+    if (tokenResponse) {
+      [self updateWithTokenResponse:tokenResponse error:nil];
+    }
+
     _authorizationError =
         [aDecoder decodeObjectOfClass:[NSError class] forKey:kAuthorizationErrorKey];
     _scope = [aDecoder decodeObjectOfClass:[NSString class] forKey:kScopeKey];
